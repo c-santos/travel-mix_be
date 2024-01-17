@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  travel-mix_be:
+    build: .
+    ports:
+      - 3001:3001
+    volumes:
+      -.:/travel-mix_be/
+    environment:
+      - PORT=3001
+      - NODE_ENV=local
+    command: npm run start:dev
