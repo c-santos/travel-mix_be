@@ -1,5 +1,5 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './infrastructure/modules/app.module';
+import { AppModule } from '@infrastructure/modules/app.module';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
@@ -7,8 +7,8 @@ async function bootstrap() {
 
   // :: Configure and init swagger document
   const swaggerConfig = new DocumentBuilder()
-    .setTitle('i2i-ms-debit-credit')
-    .setDescription('Project i2i Microservice Debit-Credit API')
+    .setTitle('travel-mix')
+    .setDescription('Project travel-mix API')
     .setVersion('1.0')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
@@ -16,6 +16,6 @@ async function bootstrap() {
     useGlobalPrefix: true,
   });
 
-  await app.listen(3000);
+  await app.listen(3001);
 }
 bootstrap();
