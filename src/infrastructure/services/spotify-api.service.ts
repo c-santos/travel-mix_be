@@ -34,11 +34,11 @@ export class SpotifyApiService extends BaseService {
         undefined,
         options,
       );
-
+      this.logger.log(response.data.name);
       return response.data;
     } catch (error) {
-      this.logger.error('getArtist error' + error);
-      if (error.code) {
+      this.logger.error('getArtist: ' + error);
+      if (error.status) {
         switch (error.code) {
           case '401':
             throw new Error('Access token expired.');
