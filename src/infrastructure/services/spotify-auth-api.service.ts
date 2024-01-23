@@ -91,13 +91,14 @@ export class SpotifyAuthApiService extends BaseService {
     return await this._base64encode(hashed);
   }
 
-  async userLogin(): Promise<URL> {
+  async login(): Promise<URL> {
     const codeChallenge = await this._generateCodeChallenge();
 
     const client_id = configService.getValue('SPOTIFY_API_CLIENT_ID');
     const redirectUri = configService.getValue('SPOTIFY_AUTH_REDIRECT_URI');
+    this.logger.log(redirectUri);
 
-    const scope = 'user-read-private user-read-email';
+    const scope = 'user-read-private user-read-email user-top-read';
     const authUrl = new URL(configService.getValue('SPOTIFY_API_AUTH_URL'));
 
     const params = new URLSearchParams({
@@ -110,7 +111,7 @@ export class SpotifyAuthApiService extends BaseService {
     });
 
     authUrl.search = new URLSearchParams(params).toString();
-
+    this.logger.log('login() CodeVerifier ' + this.codeVerifier);
     return authUrl;
   }
 
@@ -129,14 +130,18 @@ export class SpotifyAuthApiService extends BaseService {
       },
     };
 
+    this.logger.log(' DATA : ' + JSON.stringify(data));
+
     try {
       const response: AxiosResponse<any> = await this.httpService.axiosRef.post(
         url,
         data,
         options,
       );
+
       this.logger.log(response.data);
-      this.setUserAccessToken(response.data.access_token);
+      this.setUserAccessToken(response.data);
+
       return this.getUserAccessToken();
     } catch (error) {
       this.logger.error(error);

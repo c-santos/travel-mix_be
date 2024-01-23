@@ -1,5 +1,5 @@
 import { SpotifyAuthApiService } from '@infrastructure/services/spotify-auth-api.service';
-import { Controller, Get, Req, Res, Post } from '@nestjs/common';
+import { Controller, Get, Req, Res, Post, Param } from '@nestjs/common';
 
 @Controller('spotify-auth')
 export class SpotifyAuthApiController {
@@ -11,22 +11,17 @@ export class SpotifyAuthApiController {
   }
 
   @Get('/login')
-  async userLogin() {
-    return await this.spotifyAuthApiService.userLogin();
+  async login() {
+    return await this.spotifyAuthApiService.login();
   }
 
-  @Post('/callback')
-  async loginCallback(
-    @Req() request,
-    @Res({ passthrough: true }) response: Response,
-  ) {
-    console.log(request);
-    const accessToken =
-      await this.spotifyAuthApiService._generateUserAccessToken(
-        request.data.authCode,
-      );
+  @Get('/callback')
+  async loginCallback(@Req() request) {
+    let authCode = request.query.auth_code;
 
-    response.cookie();
-    return response.send();
+    let response =
+      await this.spotifyAuthApiService._generateUserAccessToken(authCode);
+
+    return response;
   }
 }
